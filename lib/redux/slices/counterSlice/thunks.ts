@@ -30,7 +30,8 @@ export const queryTweetTextForSingleId = createAppAsyncThunk(
   "counter/queryTweetText",
   async (tweetId: string) => {
     const result = await axios.get<TextForTweetDTO>(
-      `https://test-reactui.azurewebsites.net/api/getTweetTextForId?code=7Is0LlFMvFd9ZIJSR6Kifjz9jFBQDPp84-0hzx0fCEapAzFuDEVzFw==&id=` +
+      //`https://test-reactui.azurewebsites.net/api/getTweetTextForId?code=7Is0LlFMvFd9ZIJSR6Kifjz9jFBQDPp84-0hzx0fCEapAzFuDEVzFw==&id=` +
+      `http://localhost:5001/getTweetTextForId?code=7Is0LlFMvFd9ZIJSR6Kifjz9jFBQDPp84-0hzx0fCEapAzFuDEVzFw==&id=` +
         tweetId
     );
 
@@ -44,7 +45,8 @@ export const refreshPoints = createAppAsyncThunk(
     console.log("Unsupported protocol error?");
     console.log("Getting points.");
     let result = await axios.get<GetPointsDTO>(
-      `https://test-reactui.azurewebsites.net/api/getPoints?code=8KvLgCE16Jg9hNOJs9ieun7_13USAdraykI84dBDl9PsAzFuNwOYuQ==`
+      //`https://test-reactui.azurewebsites.net/api/getPoints?code=8KvLgCE16Jg9hNOJs9ieun7_13USAdraykI84dBDl9PsAzFuNwOYuQ==`
+      `http://localhost:5003/getPoints?code=8KvLgCE16Jg9hNOJs9ieun7_13USAdraykI84dBDl9PsAzFuNwOYuQ==`
     );
     console.log("Unsupported protocol error?");
     console.log(
@@ -73,7 +75,8 @@ export const fetchGraphDataFromTextAsync = createAppAsyncThunk(
       });
       let config = {
         method: "post",
-        url: `https://test-reactui.azurewebsites.net/api/getFullGraphFromText?code=lWs290-23KhM4FJrHtNmyXHjfi8-2EAALBmORT2o0qOvAzFuep9D7Q==`,
+        //url: `https://test-reactui.azurewebsites.net/api/getFullGraphFromText?code=lWs290-23KhM4FJrHtNmyXHjfi8-2EAALBmORT2o0qOvAzFuep9D7Q==`,
+        url: `http://localhost:5002/getFullGraphFromText?code=lWs290-23KhM4FJrHtNmyXHjfi8-2EAALBmORT2o0qOvAzFuep9D7Q==`,
         //url: `http://localhost:7071/api/getFullGraphFromText`,
         headers: { "Content-Type": "application/json" },
         data: data,
@@ -110,8 +113,9 @@ export const fetchGraphDataAsync = createAppAsyncThunk(
       console.log("Ran default query without ID.");
     } else {
       result = await axios.get<ResponseDTO>(
-        `https://test-reactui.azurewebsites.net/api/getGeneratedGraphFromStartingTweetId?code=duVrLpH607nBX82XjV_xwlOX7TNv2vemSiWHEY1jDmCkAzFuv7gN_A==&id=` +
+        //`https://test-reactui.azurewebsites.net/api/getGeneratedGraphFromStartingTweetId?code=duVrLpH607nBX82XjV_xwlOX7TNv2vemSiWHEY1jDmCkAzFuv7gN_A==&id=` +
           //`http://localhost:7071/api/getGeneratedGraphFromStartingTweetId?id=` +
+          `http://localhost:5000/getGeneratedGraphFromStartingTweetId?code=duVrLpH607nBX82XjV_xwlOX7TNv2vemSiWHEY1jDmCkAzFuv7gN_A==&id=` +
           startingId // todo: url builder
       );
       console.log("Ran explicit query with ID.");

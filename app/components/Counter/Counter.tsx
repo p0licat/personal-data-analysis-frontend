@@ -53,7 +53,7 @@ export const Counter = () => {
 
   const [cy_custom, set_cy_custom] = useState<cytoscape.Core>(); // hook into lifecycle of Cy
 
-  const [sliderValue, setSliderValue] = useState(0); // adjusts rendering parameters of Cytoscape
+  const [sliderValue, setSliderValue] = useState(100); // adjusts rendering parameters of Cytoscape
 
   const [list_selected, set_list_selected] = useState<Array<string>>([]);
 
@@ -84,6 +84,11 @@ export const Counter = () => {
       setEtherBalance(fromWei(balance, "ether"));
     });
   }, [logEvents]);
+
+  useEffect(() => {
+    setSliderValue(sliderValue - 1);
+    setSliderValue(sliderValue + 1);
+  }, [alternativeEdges, alternativeNodes]);
 
   useEffect(() => {
     // also initialLoad()
@@ -168,6 +173,7 @@ export const Counter = () => {
         width: "800px",
         height: "700px",
         border: "2px solid rgba(0, 0, 0, 0.05)",
+        borderWidth: "2px"
       }}
     />
   );
