@@ -11,20 +11,17 @@ import {
   fetchGraphDataAsync,
   fetchGraphDataFromTextAsync,
   lastEvent,
-  points,
   queryTweetTextForSingleId,
-  refreshPoints,
-  selectLogEvents,
   selectTextForTweets,
   useDispatch,
   useSelector,
+  selectLogEvents,
 } from "@/lib/redux";
-import { ShoppingCartRounded, SearchRounded } from "@mui/icons-material";
+import { SearchRounded } from "@mui/icons-material";
 import {
   Box,
   Button,
   Grid,
-  Input,
   Slider,
   TextField,
   Typography,
@@ -34,12 +31,9 @@ import styles from "./counter.module.css";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 import CytoscapeComponent from "react-cytoscapejs";
-import { TextForTweet } from "@/lib/redux/slices/graphDataSlice/types";
-import { TweetCard } from "../TweetCard/TweetCard";
 import { v4 as uuidv4 } from "uuid";
-import Web3 from "web3";
-import { fromWei } from "web3-utils";
-import ether_wallet_image from "./ether_good.png";
+import { TweetCard } from "../TweetCard/TweetCard";
+import { DonationView } from "./DonationView";
 
 cytoscape.use(fcose);
 
@@ -60,14 +54,6 @@ export const Counter = () => {
   const listTweetsWithText = useSelector(selectTextForTweets);
 
   const logEvents = useSelector(selectLogEvents);
-  const obtainedLastEvent = useSelector(lastEvent);
-  const pointsFrontend = useSelector(points);
-
-  const web3 = new Web3(
-    "https://mainnet.infura.io/v3/c8116ff463994648ab726d964a74957e"
-  );
-  const etherAddr = "0xd3f714E88f72f7E2BD2ae1DdedB1aB5bC4A0597e" as string;
-  const [etherBalance, setEtherBalance] = useState("0");
 
   //const [lastEvent, setLastEvent] = useState(0); // has to be moved to the store, synchronously.
 
@@ -78,16 +64,9 @@ export const Counter = () => {
   // todo: another useEffect for initial render after populating data
 
   useEffect(() => {
-    console.log("refreshing points");
-    dispatch(refreshPoints());
-    web3.eth.getBalance(etherAddr).then((balance: bigint) => {
-      setEtherBalance(fromWei(balance, "ether"));
-    });
-  }, [logEvents]);
-
-  useEffect(() => {
     setSliderValue(sliderValue - 1);
     setSliderValue(sliderValue + 1);
+    setEventHandlersOnCytoscape();
   }, [alternativeEdges, alternativeNodes]);
 
   useEffect(() => {
@@ -103,8 +82,7 @@ export const Counter = () => {
     );
   }, [list_selected]);
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setSliderValue(newValue as number);
+  function setEventHandlersOnCytoscape() {
     if (cy_custom != null) {
       cy_custom.on("cxttap", "node", (event) => {
         console.log(lastEvent);
@@ -142,6 +120,11 @@ export const Counter = () => {
         //console.log(list_selected);
       });
     }
+  }
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number);
+    setEventHandlersOnCytoscape();
   };
 
   function logText(filterText: string) {
@@ -173,32 +156,14 @@ export const Counter = () => {
         width: "800px",
         height: "700px",
         border: "2px solid rgba(0, 0, 0, 0.05)",
-        borderWidth: "2px"
+        borderWidth: "2px",
       }}
     />
   );
 
   return (
     <div className={styles.div}>
-      <Grid container>
-        <Grid
-          item
-          xs={8}
-          style={{ paddingLeft: "12px", paddingRight: "12px", width: "710px" }}
-        >
-          <img
-            src={String(ether_wallet_image.src)}
-            className={styles.logo}
-            alt="logo"
-            style={{ width: "100%" }}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <p>Ether addr: {etherAddr.toString()}</p>
-          <p>Ether balance: {etherBalance.toString()} Ξ (ETH)</p>
-          <p>Points: {pointsFrontend.toString()}</p>
-        </Grid>
-      </Grid>
+      <DonationView logEvents={logEvents} />
       <Grid container>
         <Grid item xs={4}>
           {/* <Button
