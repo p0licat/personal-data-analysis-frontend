@@ -17,6 +17,7 @@ import {
   queryTweetTextForSingleId,
   refreshPoints,
   fetchGraphDataFromTextAsync,
+  fetchGraphDataFromAudioAsync,
 } from "./thunks";
 import { lastEvent } from "../..";
 
@@ -100,6 +101,33 @@ export const counterSlice = createSlice({
           newNode.data.id = node.data.id;
           newNode.data.label = node.data.name;
           state.alternativeNodes.push(newNode);
+        });
+      })
+      .addCase(fetchGraphDataFromAudioAsync.fulfilled, (state, action) => {
+        state.fullData = action.payload;
+        
+        action.payload.nodes.forEach((node: any) => {
+          var newNode: UsableNodeData = { data: { id: "", label: "" } };
+          newNode.data.id = node.data.id;
+          newNode.data.label = node.data.name;
+          state.alternativeNodes.push(newNode);
+        });
+        
+        action.payload.edges.forEach((edge: any) => {
+          var newEdge: UsableEdge = {
+            data: { id: "", label: "", source: "", target: "" },
+          };
+          newEdge.data.source = edge.data.source;
+          newEdge.data.target = edge.data.target;
+          newEdge.data.label = "EdgeLabel";
+          newEdge.data.id = "";
+          state.alternativeEdges.push({
+            data: {
+              id: edge.data.source + edge.data.target,
+              source: edge.data.source,
+              target: edge.data.target,
+            },
+          });
         });
       })
       .addCase(fetchGraphDataFromTextAsync.fulfilled, (state, action) => {

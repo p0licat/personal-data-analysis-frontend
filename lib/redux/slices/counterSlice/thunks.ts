@@ -16,6 +16,34 @@ import { selectCount } from "./selectors";
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
+
+export const fetchGraphDataFromAudioAsync = createAppAsyncThunk(
+  "counter/fetchGraphFromAudio",
+  async (file: File) => {
+    let data = file;
+    let config = {
+      method: "post",
+      //url: `https://test-reactui.azurewebsites.net/api/getFullGraphFromText?code=lWs290-23KhM4FJrHtNmyXHjfi8-2EAALBmORT2o0qOvAzFuep9D7Q==`,
+      //url: `http://localhost:7071/api/getFullGraphFromText`,
+      url: `http://localhost:5004/queryAudioText?code=lWs290-23KhM4FJrHtNmyXHjfi8-2EAALBmORT2o0qOvAzFuep9D7Q==`,
+      headers: { "Content-Type": "audio/mpeg" },
+      data: data,
+    };
+    let result: any;
+    result = await axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return result.data;
+  }
+);
+
 export const incrementAsync = createAppAsyncThunk(
   "counter/fetchIdentityCount",
   async (amount: number) => {

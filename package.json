@@ -24,6 +24,7 @@
     "cytoscape-cose-bilkent": "^4.1.0",
     "cytoscape-d3-force": "^1.1.4",
     "cytoscape-fcose": "^2.2.0",
+    "mic-recorder-to-mp3": "^2.2.2",
     "next": "latest",
     "react": "18.2.0",
     "react-cytoscapejs": "^2.0.0",

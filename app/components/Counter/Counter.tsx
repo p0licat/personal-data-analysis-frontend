@@ -34,6 +34,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 import { v4 as uuidv4 } from "uuid";
 import { TweetCard } from "../TweetCard/TweetCard";
 import { DonationView } from "./DonationView";
+import { MicrophoneView } from "./MicrophoneView";
 
 cytoscape.use(fcose);
 
@@ -164,6 +165,7 @@ export const Counter = () => {
   return (
     <div className={styles.div}>
       <DonationView logEvents={logEvents} />
+      <MicrophoneView />
       <Grid container>
         <Grid item xs={4}>
           {/* <Button
