@@ -1,0 +1,156 @@
+"use client";
+
+/* Core */
+import { useState } from "react";
+
+/* Instruments */
+import {
+  alternativeEdgesSelector,
+  alternativeNodesSelector,
+  counterSlice,
+  fetchGraphDataAsync,
+  incrementAsync,
+  incrementIfOddAsync,
+  selectCount,
+  selectFullData,
+  useDispatch,
+  useSelector,
+} from "@/lib/redux";
+import { ShoppingCartRounded } from "@mui/icons-material";
+import { Button, Input, Slider, Typography } from "@mui/material";
+import styles from "./counter.module.css";
+
+import { ResponseDTO } from "@/lib/redux/slices/graphDataSlice/types";
+import CytoscapeComponent from "react-cytoscapejs";
+import fcose from "cytoscape-fcose";
+import cytoscape from "cytoscape";
+
+cytoscape.use(fcose);
+
+export const Counter = () => {
+  const dispatch = useDispatch();
+  const count = useSelector(selectCount);
+  const [incrementAmount, setIncrementAmount] = useState(2);
+
+  const [filterText, setFilterText] = useState("");
+  const jsonData: ResponseDTO = useSelector(selectFullData);
+  const alternativeNodes = useSelector(alternativeNodesSelector);
+  const alternativeEdges = useSelector(alternativeEdgesSelector);
+
+  const [sliderValue, setSliderValue] = useState(0);
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number);
+  };
+
+  function logText(filterText: string) {
+    console.log(jsonData.elements.edges);
+    console.log(alternativeNodes);
+  }
+
+  const onChangeHandler = function (e: any) {
+    setFilterText(e.target.value);
+  };
+
+  const layout = { name: "fcose", animate: false, idealEdgeLength: sliderValue };
+  // Power iteration tolerance
+
+  return (
+    <div>
+      <Button
+        variant="text"
+        startIcon={<ShoppingCartRounded />}
+        onClick={() => logText("")}
+      >
+        Print variable
+      </Button>
+      <Button
+        variant="text"
+        startIcon={<ShoppingCartRounded />}
+        onClick={() => dispatch(fetchGraphDataAsync(filterText))}
+      >
+        Query graph data
+      </Button>
+      <Input
+        aria-label="Demo input"
+        placeholder="Type something…"
+        value={filterText}
+        onChange={onChangeHandler}
+      />
+      <Slider
+        aria-label="Volume"
+        value={sliderValue}
+        onChange={handleSliderChange}
+        defaultValue={50}
+        min={1}
+        max={2000}
+        step={10}
+      />
+      <CytoscapeComponent
+        //elements={alternativeNodes.concat([{data: {id:"1", "source": "1669000816219267072", target: "1669022239751118862", label:"default"}}])}
+        elements={CytoscapeComponent.normalizeElements({
+          nodes: alternativeNodes,
+          edges: alternativeEdges, //[{data: {source: "1669000816219267072", target: "1669022239751118862"}}] //alternativeEdges//
+        })}
+        //   nodes: [
+        //     { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
+        //     { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } }
+        //   ],
+        //   edges: [
+        //     {
+        //       data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' }
+        //     }
+        //   ]
+        // })}
+        layout={layout}
+        style={{ width: "100%", height: "600px", border: "1px dashed red" }}
+      />
+      <Typography> Debug... </Typography>
+      <div className={styles.row}>
+        <button
+          className={styles.button}
+          aria-label="Decrement value"
+          onClick={() => dispatch(counterSlice.actions.decrement())}
+        >
+          -
+        </button>
+        <span className={styles.value}>{count}</span>
+        <button
+          className={styles.button}
+          aria-label="Increment value"
+          onClick={() => dispatch(counterSlice.actions.increment())}
+        >
+          +
+        </button>
+      </div>
+      <div className={styles.row}>
+        <input
+          className={styles.textbox}
+          aria-label="Set increment amount"
+          value={incrementAmount}
+          onChange={(e) => setIncrementAmount(Number(e.target.value ?? 0))}
+        />
+        <button
+          className={styles.button}
+          onClick={() =>
+            dispatch(counterSlice.actions.incrementByAmount(incrementAmount))
+          }
+        >
+          Add Amount
+        </button>
+        <button
+          className={styles.asyncButton}
+          onClick={() => dispatch(incrementAsync(incrementAmount))}
+        >
+          Add Async
+        </button>
+        <button
+          className={styles.button}
+          onClick={() => dispatch(incrementIfOddAsync(incrementAmount))}
+        >
+          Add If Odd
+        </button>
+      </div>
+    </div>
+  );
+};
