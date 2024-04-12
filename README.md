@@ -1,4 +1,12 @@
-# Redux Toolkit TypeScript Example
+
+## Cytoscape with Embedding Based Retrieval 
+
+This small machine learning project recognizes the user's voice and by computing embeddings it retrieves relevant data from a database. There are various heuristics for expanding the search graph, and tools that can be used to find related content based on vector embedding similarity. For the full NLP analysis some other Python tools can be used.
+
+![screenshot1](Images/func-1.PNG)
+![screenshot1](Images/func-2.PNG)
+
+## Redux Toolkit TypeScript Example
 
 This example shows how to integrate Next.js with [Redux Toolkit](https://redux-toolkit.js.org).
 
